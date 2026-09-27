@@ -31,7 +31,7 @@ export const SCORE_BANDS = [
     min: 60,
     max: 99,
     mentorMessage:
-      'いい線いってるよ。チェックリストを確認して、次はもっときれいに分けてみよう。',
+      'いい線いってるよ。正解の切り口と比べて、次はもっときれいに分けてみよう。',
   },
   {
     min: 0,
@@ -41,18 +41,11 @@ export const SCORE_BANDS = [
   },
 ] as const
 
-export type ChecklistItem = {
-  id: 'no_null' | 'no_mixed' | 'no_missing'
-  label: string
-  passed: boolean
-}
-
 export type ScoringResult = {
   /** Most frequent non-null axis among placed cards; null if none. */
   targetAxisId: string | null
   targetAxisName: string | null
   score: number
-  checklist: ChecklistItem[]
   mentorMessage: string
 }
 
@@ -118,49 +111,6 @@ export function computeScore(
   return Math.max(0, Math.round(raw))
 }
 
-export function buildChecklist(
-  problem: LogicTreeProblem,
-  placed: Card[],
-  targetAxisId: string | null,
-): ChecklistItem[] {
-  if (placed.length === 0) {
-    return [
-      { id: 'no_null', label: '関係ない要素が入っていないか', passed: false },
-      { id: 'no_mixed', label: '分け方が混ざっていないか', passed: false },
-      { id: 'no_missing', label: 'モレがないか', passed: false },
-    ]
-  }
-
-  const noNull = placed.every((c) => c.axisId !== null)
-
-  const noCardsOutsideTarget =
-    targetAxisId !== null && placed.every((c) => c.axisId === targetAxisId)
-
-  const allOfTargetPlaced =
-    targetAxisId !== null &&
-    problem.cards
-      .filter((c) => c.axisId === targetAxisId)
-      .every((c) => placed.some((p) => p.id === c.id))
-
-  return [
-    {
-      id: 'no_null',
-      label: '関係ない要素が入っていないか',
-      passed: noNull,
-    },
-    {
-      id: 'no_mixed',
-      label: '分け方が混ざっていないか',
-      passed: noCardsOutsideTarget,
-    },
-    {
-      id: 'no_missing',
-      label: 'モレがないか',
-      passed: allOfTargetPlaced,
-    },
-  ]
-}
-
 export function mentorMessageForScore(score: number): string {
   for (const band of SCORE_BANDS) {
     if (score >= band.min && score <= band.max) return band.mentorMessage
@@ -182,13 +132,11 @@ export function scoreSubmission(
     ? (problem.axes.find((a) => a.id === targetAxisId) ?? null)
     : null
   const score = computeScore(problem, placed, targetAxisId)
-  const checklist = buildChecklist(problem, placed, targetAxisId)
 
   return {
     targetAxisId,
     targetAxisName: targetAxis?.name ?? null,
     score,
-    checklist,
     mentorMessage: mentorMessageForScore(score),
   }
 }

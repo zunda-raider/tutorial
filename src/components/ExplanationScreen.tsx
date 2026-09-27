@@ -24,7 +24,7 @@ export function ExplanationScreen({
   const nullCards = problem.cards.filter((c) => c.axisId === null)
 
   return (
-    <div className={styles.layout}>
+    <div className={`${styles.layout} ${screenStyles.withStickyBar}`}>
       <div className={styles.main}>
         <header className={styles.header}>
           <span className={styles.progress}>解説 — {problem.parentLabel}</span>
@@ -56,19 +56,19 @@ export function ExplanationScreen({
             </ul>
           </section>
         )}
-
-        <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.nextBtn}
-            onClick={onBackToHome}
-          >
-            ホームへ戻る
-          </button>
-        </div>
       </div>
 
       <Mentor message={problem.summaryExplanation} />
+
+      <div className={screenStyles.stickyActionBar} role="group" aria-label="解説後の操作">
+        <button
+          type="button"
+          className={screenStyles.actionPrimary}
+          onClick={onBackToHome}
+        >
+          ホームへ戻る
+        </button>
+      </div>
     </div>
   )
 }

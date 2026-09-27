@@ -362,47 +362,74 @@
   line-height: 1;
 }
 
-.checklist {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* Large primary actions under score / sticky bottom bar */
+.primaryActions {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.checklist li {
-  display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text-h);
+  width: 100%;
 }
 
-.checkPass {
-  background: rgba(47, 158, 107, 0.12);
-}
-
-.checkFail {
-  background: rgba(224, 83, 83, 0.12);
-}
-
-.checkMark {
-  font-size: 1.1rem;
+.actionPrimary,
+.actionSecondary {
+  flex: 1 1 140px;
+  font-family: inherit;
+  font-size: 1.05rem;
   font-weight: 800;
-  width: 1.4em;
-  text-align: center;
+  padding: 16px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  border: none;
+  min-height: 52px;
+  transition: transform 0.1s, opacity 0.15s, border-color 0.15s;
 }
 
-.checkPass .checkMark {
-  color: #2f9e6b;
+.actionPrimary {
+  background: #2f9e6b;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(47, 158, 107, 0.35);
 }
 
-.checkFail .checkMark {
-  color: #e05353;
+.actionSecondary {
+  background: var(--card-bg);
+  color: var(--text-h);
+  border: 2px solid var(--border);
+}
+
+.actionPrimary:hover,
+.actionSecondary:hover {
+  transform: translateY(-1px);
+}
+
+.actionSecondary:hover {
+  border-color: var(--accent);
+}
+
+.withStickyBar {
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+}
+
+.stickyActionBar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  z-index: 30;
+  width: 100%;
+  max-width: 1100px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -6px 20px rgba(40, 30, 70, 0.08);
+}
+
+.stickyActionBar .actionPrimary,
+.stickyActionBar .actionSecondary {
+  flex: 1;
 }
 
 .sectionHeading {

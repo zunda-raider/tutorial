@@ -47,21 +47,26 @@ export function ScoringScreen({
           <p className={screenStyles.scoreValue}>{result.score}</p>
         </div>
 
-        <ul className={screenStyles.checklist} aria-label="チェックリスト">
-          {result.checklist.map((item) => (
-            <li
-              key={item.id}
-              className={
-                item.passed ? screenStyles.checkPass : screenStyles.checkFail
-              }
-            >
-              <span className={screenStyles.checkMark} aria-hidden="true">
-                {item.passed ? '○' : '×'}
-              </span>
-              <span>{item.label}</span>
-            </li>
-          ))}
-        </ul>
+        <div
+          className={screenStyles.primaryActions}
+          role="group"
+          aria-label="採点後の操作"
+        >
+          <button
+            type="button"
+            className={screenStyles.actionPrimary}
+            onClick={onShowExplanation}
+          >
+            解説を見る
+          </button>
+          <button
+            type="button"
+            className={screenStyles.actionSecondary}
+            onClick={onGoHome}
+          >
+            ホームへ戻る
+          </button>
+        </div>
 
         <TreeView
           parentLabel={problem.parentLabel}
@@ -86,23 +91,6 @@ export function ScoringScreen({
               />
             )
           })}
-        </div>
-
-        <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.nextBtn}
-            onClick={onShowExplanation}
-          >
-            解説を見る
-          </button>
-          <button
-            type="button"
-            className={styles.altBtn}
-            onClick={onGoHome}
-          >
-            ホームへ戻る
-          </button>
         </div>
       </div>
 
