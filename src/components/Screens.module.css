@@ -64,7 +64,8 @@
 }
 
 .menuItem,
-.menuLocked {
+.menuLocked,
+.menuFinished {
   width: 100%;
   display: flex;
   align-items: center;
@@ -98,8 +99,16 @@
   opacity: 0.75;
 }
 
+.menuFinished {
+  background: var(--muted-bg);
+  color: var(--text-h);
+  cursor: default;
+  border-color: #2f9e6b;
+}
+
 .lockBadge,
-.openBadge {
+.openBadge,
+.scoreBadge {
   font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 8px;
@@ -113,6 +122,11 @@
 
 .openBadge {
   background: var(--accent);
+  color: #fff;
+}
+
+.scoreBadge {
+  background: #2f9e6b;
   color: #fff;
 }
 
@@ -146,4 +160,135 @@
 
 .secondaryBtn:hover {
   border-color: var(--accent);
+}
+
+.scoreSummary {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.scoreSummary li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--muted-bg);
+  border-radius: 10px;
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.scoreHero {
+  text-align: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.scoreLabel {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.scoreValue {
+  margin: 4px 0 0;
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-h);
+}
+
+.checkPass {
+  background: rgba(47, 158, 107, 0.12);
+}
+
+.checkFail {
+  background: rgba(224, 83, 83, 0.12);
+}
+
+.checkMark {
+  font-size: 1.1rem;
+  font-weight: 800;
+  width: 1.4em;
+  text-align: center;
+}
+
+.checkPass .checkMark {
+  color: #2f9e6b;
+}
+
+.checkFail .checkMark {
+  color: #e05353;
+}
+
+.sectionHeading {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--text-h);
+  text-align: left;
+}
+
+.answerList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.answerBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.axisExplanation {
+  margin: 0;
+  padding: 0 4px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text);
+  text-align: left;
+}
+
+.nullSection {
+  text-align: left;
+}
+
+.nullList {
+  margin: 8px 0 0;
+  padding: 0 0 0 1.1em;
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.nullList strong {
+  color: var(--text-h);
 }

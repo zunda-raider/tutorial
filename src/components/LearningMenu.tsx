@@ -1,6 +1,7 @@
 import styles from './Screens.module.css'
 
 type LearningMenuProps = {
+  week: number
   onSelectLogicTree: () => void
   onBack: () => void
 }
@@ -11,12 +12,16 @@ const ITEMS = [
   { id: 'new-biz', label: '新規事業立案', locked: true },
 ] as const
 
-export function LearningMenu({ onSelectLogicTree, onBack }: LearningMenuProps) {
+export function LearningMenu({
+  week,
+  onSelectLogicTree,
+  onBack,
+}: LearningMenuProps) {
   return (
     <div className={styles.screen}>
       <div className={styles.panel}>
         <h1 className={styles.panelTitle}>学習メニュー</h1>
-        <p className={styles.hint}>学びたいテーマを選んでください</p>
+        <p className={styles.hint}>第{week}週 — 学びたいテーマを選んでください</p>
         <ul className={styles.menuList}>
           {ITEMS.map((item) => (
             <li key={item.id}>
@@ -39,7 +44,7 @@ export function LearningMenu({ onSelectLogicTree, onBack }: LearningMenuProps) {
           ))}
         </ul>
         <button type="button" className={styles.secondaryBtn} onClick={onBack}>
-          タイトルへ
+          スケジュールへ
         </button>
       </div>
     </div>

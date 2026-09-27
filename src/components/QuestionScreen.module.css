@@ -49,6 +49,13 @@
   text-align: center;
 }
 
+.treeCaption {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
 .parentNode {
   display: inline-block;
   background: var(--accent);
@@ -90,10 +97,16 @@
   transition: transform 0.1s, border-color 0.15s, background 0.15s;
 }
 
-.childCard:hover,
-.poolCard:hover {
+.childCard:hover:not(:disabled),
+.poolCard:hover:not(:disabled) {
   transform: translateY(-1px);
   border-color: var(--accent);
+}
+
+.childCard:disabled,
+.poolCard:disabled {
+  cursor: default;
+  opacity: 0.9;
 }
 
 .childCard {
@@ -101,15 +114,15 @@
   border-color: var(--accent-border);
 }
 
-.highlighted {
-  border-color: #e05353 !important;
-  background: rgba(224, 83, 83, 0.15) !important;
-  box-shadow: 0 0 0 2px rgba(224, 83, 83, 0.35);
-}
-
-.correctCard {
-  border-color: #2f9e6b !important;
-  background: rgba(47, 158, 107, 0.15) !important;
+.childCardStatic {
+  display: inline-block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--text-h);
 }
 
 .pool {
@@ -149,8 +162,7 @@
 }
 
 .judgeBtn,
-.nextBtn,
-.altBtn {
+.nextBtn {
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 700;
@@ -176,15 +188,8 @@
   color: #fff;
 }
 
-.altBtn {
-  background: transparent;
-  color: var(--text-h);
-  border: 1.5px solid var(--border);
-}
-
 .judgeBtn:hover:not(:disabled),
-.nextBtn:hover,
-.altBtn:hover {
+.nextBtn:hover {
   transform: translateY(-1px);
 }
 

@@ -1,60 +1,57 @@
 export type Axis = {
   id: string
   name: string
-  reviewText: string
+  explanation: string
 }
 
 export type Card = {
   id: string
   label: string
   axisId: string | null
-}
-
-export type MentorOverrides = {
-  nullCard?: string
-  mixedAxes?: string
-  incomplete?: string
-  alreadySolved?: string
+  /** Why this card is irrelevant — only for axisId === null */
+  nullReason?: string
 }
 
 export type LogicTreeProblem = {
   id: string
+  problemStatement: string
   parentLabel: string
+  summaryExplanation: string
   axes: Axis[]
   cards: Card[]
-  mentorOverrides?: MentorOverrides
 }
 
-export const DEFAULT_MENTOR_MESSAGES = {
-  nullCard: '関係ない要素が混ざってるよ',
-  mixedAxes: '分け方が混ざってるよ。ダブりが出ちゃう',
-  incomplete: 'まだ足りないものがあるよ',
-  alreadySolved: 'その分け方はもう見つけたね',
-  intro: '親要素を分解してみよう。カードを選んで判定してね！',
-} as const
+/** Week number (1-based) ↔ problem mapping. Week N uses problems[N-1]. */
+export const WEEKS = [1, 2, 3] as const
+export type WeekNumber = (typeof WEEKS)[number]
+export const TOTAL_WEEKS = WEEKS.length
 
 export const logicTreeProblems: LogicTreeProblem[] = [
   {
     id: 'cafe-sales',
+    problemStatement:
+      '駅前のカフェの売上を分解してみよう。モレなく、ダブりなくね',
     parentLabel: 'カフェの売上',
+    summaryExplanation:
+      '迷ったら、まず掛け算か足し算で分けられないか考えよう。要因（なぜ）と構成要素（何でできているか）を混ぜないのが大事だよ',
     axes: [
       {
         id: 'multiply',
-        name: '掛け算（客数×客単価）',
-        reviewText:
-          '売上＝客数×客単価。ケース面接で一番よく使う分け方だよ',
+        name: '掛け算',
+        explanation:
+          '売上＝客数×客単価。ケース面接で最もよく使う分け方。どちらが落ちているかで打ち手が変わる',
       },
       {
         id: 'customer-type',
         name: '客の種類',
-        reviewText:
-          '新規とリピートで分けると、どっちに手を打つべきか見えてくるね',
+        explanation:
+          '新規とリピートで分けると、集客と定着のどちらに問題があるかが見える',
       },
       {
         id: 'weekday',
         name: '曜日',
-        reviewText:
-          '時間で分けるのも立派な切り口。ピークがどこかを探せるよ',
+        explanation:
+          '時間で分けるのも切り口の一つ。平日と休日で客層が違う店では特に有効',
       },
     ],
     cards: [
@@ -64,24 +61,37 @@ export const logicTreeProblems: LogicTreeProblem[] = [
       { id: 'c4', label: '既存客の売上', axisId: 'customer-type' },
       { id: 'c5', label: '平日の売上', axisId: 'weekday' },
       { id: 'c6', label: '休日の売上', axisId: 'weekday' },
-      { id: 'c7', label: '店長のやる気', axisId: null },
-      { id: 'c8', label: '天気', axisId: null },
+      {
+        id: 'c7',
+        label: '店長のやる気',
+        axisId: null,
+        nullReason:
+          '売上の中身ではなく、売上に影響するかもしれない要因。分解ではなく原因の話',
+      },
+      {
+        id: 'c8',
+        label: '天気',
+        axisId: null,
+        nullReason: 'これも要因。売上を分けた結果には出てこない',
+      },
     ],
   },
   {
     id: 'convenience-profit',
+    problemStatement: '今度はコンビニの利益。売上とは分け方が変わるよ',
     parentLabel: 'コンビニの利益',
+    summaryExplanation:
+      '階層を意識しよう。「店員の数」は費用の下に来るもので、利益のすぐ下には置けないんだ',
     axes: [
       {
         id: 'subtract',
-        name: '引き算（売上−費用）',
-        reviewText: '利益＝売上−費用。利益の問題はまずこれで分けよう',
+        name: '引き算',
+        explanation: '利益＝売上−費用。利益の問題はまずこれで分ける',
       },
       {
         id: 'product',
         name: '商品区分',
-        reviewText:
-          '商品で分けるなら『その他』を入れてモレをなくすのがコツ',
+        explanation: '商品で分けるなら「その他」を入れてモレを防ぐ',
       },
     ],
     cards: [
@@ -90,31 +100,43 @@ export const logicTreeProblems: LogicTreeProblem[] = [
       { id: 'p3', label: '食品の利益', axisId: 'product' },
       { id: 'p4', label: '日用品の利益', axisId: 'product' },
       { id: 'p5', label: 'その他商品の利益', axisId: 'product' },
-      { id: 'p6', label: '立地', axisId: null },
-      { id: 'p7', label: '店員の数', axisId: null },
+      {
+        id: 'p6',
+        label: '立地',
+        axisId: null,
+        nullReason: '利益に影響する要因で、利益の構成要素ではない',
+      },
+      {
+        id: 'p7',
+        label: '店員の数',
+        axisId: null,
+        nullReason:
+          '費用の一部をさらに分けたときに出てくる要素。この段には早すぎる',
+      },
     ],
   },
   {
     id: 'employee-count',
+    problemStatement: 'ある会社の従業員数を分けてみよう。分け方はいくつもあるよ',
     parentLabel: '会社の従業員数',
+    summaryExplanation:
+      '「Aと、A以外」はモレをなくす最強の型。困ったらこれを使おう',
     axes: [
       {
         id: 'employment',
         name: '雇用形態',
-        reviewText:
-          '雇用形態で分けると、人件費の話につなげやすいよ',
+        explanation: '人件費や採用の話につなげやすい',
       },
       {
         id: 'location',
         name: '勤務地',
-        reviewText:
-          '『東京』と『東京以外』みたいに、AとA以外で分けるとモレが出ないね',
+        explanation:
+          '「東京」と「東京以外」のように、AとA以外で分けるとモレが出ない',
       },
       {
         id: 'department',
         name: '部門',
-        reviewText:
-          '部門で分けるときも『〜以外』を使えばMECEになるよ',
+        explanation: '部門が多いときも「〜以外」でまとめればMECEになる',
       },
     ],
     cards: [
@@ -124,8 +146,22 @@ export const logicTreeProblems: LogicTreeProblem[] = [
       { id: 'e4', label: '東京以外で勤務', axisId: 'location' },
       { id: 'e5', label: '営業部門', axisId: 'department' },
       { id: 'e6', label: '営業以外の部門', axisId: 'department' },
-      { id: 'e7', label: '残業時間', axisId: null },
-      { id: 'e8', label: '平均年齢', axisId: null },
+      {
+        id: 'e7',
+        label: '残業時間',
+        axisId: null,
+        nullReason: '人数ではなく働き方の指標',
+      },
+      {
+        id: 'e8',
+        label: '平均年齢',
+        axisId: null,
+        nullReason: '従業員の属性の平均で、人数の内訳ではない',
+      },
     ],
   },
 ]
+
+export function getProblemForWeek(week: WeekNumber): LogicTreeProblem {
+  return logicTreeProblems[week - 1]
+}

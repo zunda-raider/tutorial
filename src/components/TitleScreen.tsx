@@ -11,7 +11,7 @@ export function TitleScreen({ onStart }: TitleScreenProps) {
         <p className={styles.eyebrow}>経営ゲーム</p>
         <h1 className={styles.title}>ロジックツリー学習</h1>
         <p className={styles.subtitle}>
-          親要素を分解して、MECEな切り口を見つけよう
+          3週間でMECEな切り口を身につけよう
         </p>
         <button type="button" className={styles.primaryBtn} onClick={onStart}>
           はじめる
