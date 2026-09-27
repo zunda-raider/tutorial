@@ -35,6 +35,9 @@ export function QuestionScreen({
     .map((id) => problem.cards.find((c) => c.id === id))
     .filter((c): c is Card => c !== undefined)
 
+  const isLv2 = problem.level === 2 && problem.givenTree
+  const levelLabel = problem.level === 2 ? 'Lv2' : 'Lv1'
+
   function placeCard(cardId: string) {
     if (submitted || placedSet.has(cardId)) return
     setPlacedIds((prev) => [...prev, cardId])
@@ -56,9 +59,51 @@ export function QuestionScreen({
       <div className={styles.main}>
         <header className={styles.header}>
           <span className={styles.progress}>
-            問題 {questionNumber} / {totalQuestions}
+            {levelLabel} 問題 {questionNumber} / {totalQuestions}
           </span>
+          {isLv2 && problem.digTargetLabel && (
+            <span className={styles.solvedTag}>
+              「{problem.digTargetLabel}」を分解
+            </span>
+          )}
         </header>
+
+        {isLv2 && problem.givenTree && (
+          <section className={styles.givenTree} aria-label="与えられたツリー">
+            <h2 className={styles.givenTitle}>与えられたツリー</h2>
+            <div className={styles.parentNode}>
+              {problem.givenTree.parentLabel}
+            </div>
+            {problem.givenTree.children.length > 0 && (
+              <>
+                <div className={styles.branchLine} aria-hidden="true" />
+                <div className={styles.children}>
+                  {problem.givenTree.children.map((label) => {
+                    const isTarget = label === problem.digTargetLabel
+                    return (
+                      <span
+                        key={label}
+                        className={
+                          isTarget
+                            ? styles.digTargetNode
+                            : styles.childCardStatic
+                        }
+                      >
+                        {label}
+                        {isTarget ? ' ← ここ' : ''}
+                      </span>
+                    )
+                  })}
+                </div>
+              </>
+            )}
+            {problem.givenTree.children.length === 0 && (
+              <p className={styles.givenHint}>
+                このノードをチャネルなどでさらに分けよう
+              </p>
+            )}
+          </section>
+        )}
 
         <section className={styles.tree} aria-label="ロジックツリー">
           <div className={styles.parentNode}>{problem.parentLabel}</div>
@@ -66,7 +111,9 @@ export function QuestionScreen({
           <div className={styles.children}>
             {placedCards.length === 0 ? (
               <p className={styles.emptyHint}>
-                下のカードをタップして配置しよう
+                {isLv2
+                  ? '下のカードをタップして、この枝の下に配置しよう'
+                  : '下のカードをタップして配置しよう'}
               </p>
             ) : (
               placedCards.map((card) => (

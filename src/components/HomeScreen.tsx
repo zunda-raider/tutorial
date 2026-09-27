@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import {
   getProblemById,
-  logicTreeProblems,
+  problemDisplayName,
+  problemsForLevel,
 } from '../data/logicTreeProblems'
 import type { SaveData } from '../storage/save'
 import { todayLocalDate } from '../storage/save'
@@ -61,7 +62,10 @@ export function HomeScreen({
     return set
   }, [solvedEntries])
 
-  const allDone = logicTreeProblems.every((p) => saveData.problems[p.id])
+  const lv1Problems = problemsForLevel(1)
+  const lv2Problems = problemsForLevel(2)
+  const lv1Done = lv1Problems.every((p) => saveData.problems[p.id])
+  const lv2Done = lv2Problems.every((p) => saveData.problems[p.id])
 
   const selectedDayResults = useMemo(() => {
     if (!selectedDate) return []
@@ -71,7 +75,7 @@ export function HomeScreen({
         const problem = getProblemById(e.problemId)
         return {
           problemId: e.problemId,
-          name: problem?.parentLabel ?? e.problemId,
+          name: problem ? problemDisplayName(problem) : e.problemId,
           score: e.score,
         }
       })
@@ -197,15 +201,36 @@ export function HomeScreen({
           </section>
         )}
 
-        {allDone && (
-          <section className={styles.allScores} aria-label="全問題のスコア">
-            <h3 className={styles.dayDetailTitle}>全問題クリア！スコア一覧</h3>
+        {lv1Done && (
+          <section className={styles.allScores} aria-label="Lv1スコア一覧">
+            <h3 className={styles.dayDetailTitle}>
+              ロジックツリー Lv1 クリア！スコア一覧
+            </h3>
             <ul className={styles.scoreSummary}>
-              {logicTreeProblems.map((p) => {
+              {lv1Problems.map((p) => {
                 const entry = saveData.problems[p.id]
                 return (
                   <li key={p.id}>
-                    <span>{p.parentLabel}</span>
+                    <span>{problemDisplayName(p)}</span>
+                    <strong>{entry ? `${entry.score}点` : '—'}</strong>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        )}
+
+        {lv2Done && (
+          <section className={styles.allScores} aria-label="Lv2スコア一覧">
+            <h3 className={styles.dayDetailTitle}>
+              ロジックツリー Lv2 クリア！スコア一覧
+            </h3>
+            <ul className={styles.scoreSummary}>
+              {lv2Problems.map((p) => {
+                const entry = saveData.problems[p.id]
+                return (
+                  <li key={p.id}>
+                    <span>{problemDisplayName(p)}</span>
                     <strong>{entry ? `${entry.score}点` : '—'}</strong>
                   </li>
                 )

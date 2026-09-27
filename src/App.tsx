@@ -8,7 +8,9 @@ import { TitleScreen } from './components/TitleScreen'
 import {
   allProblemsSolved,
   firstUnsolvedProblem,
-  logicTreeProblems,
+  getProblemById,
+  problemsForLevel,
+  type ProblemLevel,
 } from './data/logicTreeProblems'
 import {
   AUTO_EXPLANATION_THRESHOLD,
@@ -41,7 +43,7 @@ type Screen =
     }
 
 function requireProblem(id: string) {
-  const problem = logicTreeProblems.find((p) => p.id === id)
+  const problem = getProblemById(id)
   if (!problem) throw new Error(`Unknown problem: ${id}`)
   return problem
 }
@@ -56,6 +58,8 @@ function App() {
   }, [])
 
   const solvedIds = new Set(Object.keys(saveData.problems))
+  const lv1Cleared = allProblemsSolved(solvedIds, 1)
+  const lv2Cleared = allProblemsSolved(solvedIds, 2)
 
   function goHome() {
     setScreen({ kind: 'home' })
@@ -69,8 +73,8 @@ function App() {
     setScreen({ kind: 'menu' })
   }
 
-  function startLogicTree() {
-    const next = firstUnsolvedProblem(solvedIds)
+  function startLogicTree(level: ProblemLevel) {
+    const next = firstUnsolvedProblem(solvedIds, level)
     if (!next) return
     setScreen({ kind: 'question', problemId: next.id })
   }
@@ -112,6 +116,12 @@ function App() {
     setSaveData({ ...EMPTY_SAVE, problems: {} })
   }
 
+  const questionProblem =
+    screen.kind === 'question' ? requireProblem(screen.problemId) : null
+  const levelProblems = questionProblem
+    ? problemsForLevel(questionProblem.level)
+    : []
+
   return (
     <div className="app-shell">
       {screen.kind === 'title' && <TitleScreen onStart={goHome} />}
@@ -127,20 +137,23 @@ function App() {
 
       {screen.kind === 'menu' && (
         <LearningMenu
-          allCleared={allProblemsSolved(solvedIds)}
-          onSelectLogicTree={startLogicTree}
+          lv1Cleared={lv1Cleared}
+          lv2Cleared={lv2Cleared}
+          lv2Started={problemsForLevel(2).some((p) => solvedIds.has(p.id))}
+          onSelectLogicTreeLv1={() => startLogicTree(1)}
+          onSelectLogicTreeLv2={() => startLogicTree(2)}
           onBack={goHome}
         />
       )}
 
-      {screen.kind === 'question' && (
+      {screen.kind === 'question' && questionProblem && (
         <QuestionScreen
           key={screen.problemId}
-          problem={requireProblem(screen.problemId)}
+          problem={questionProblem}
           questionNumber={
-            logicTreeProblems.findIndex((p) => p.id === screen.problemId) + 1
+            levelProblems.findIndex((p) => p.id === screen.problemId) + 1
           }
-          totalQuestions={logicTreeProblems.length}
+          totalQuestions={levelProblems.length}
           onSubmit={(ids) => handleSubmit(screen.problemId, ids)}
         />
       )}

@@ -30,11 +30,15 @@ export function ScoringScreen({
     return 0
   })
 
+  const isLv2 = problem.level === 2
+
   return (
     <div className={styles.layout}>
       <div className={styles.main}>
         <header className={styles.header}>
-          <span className={styles.progress}>採点結果</span>
+          <span className={styles.progress}>
+            採点結果{isLv2 ? '（Lv2）' : ''}
+          </span>
           {result.targetAxisName && (
             <span className={styles.solvedTag}>
               狙った切り口：{result.targetAxisName}
@@ -67,6 +71,34 @@ export function ScoringScreen({
             ホームへ戻る
           </button>
         </div>
+
+        {isLv2 && problem.givenTree && (
+          <section className={styles.givenTree} aria-label="与えられたツリー">
+            <h2 className={styles.givenTitle}>与えられたツリー</h2>
+            <div className={styles.parentNode}>
+              {problem.givenTree.parentLabel}
+            </div>
+            {problem.givenTree.children.length > 0 && (
+              <>
+                <div className={styles.branchLine} aria-hidden="true" />
+                <div className={styles.children}>
+                  {problem.givenTree.children.map((label) => (
+                    <span
+                      key={label}
+                      className={
+                        label === problem.digTargetLabel
+                          ? styles.digTargetNode
+                          : styles.childCardStatic
+                      }
+                    >
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+          </section>
+        )}
 
         <TreeView
           parentLabel={problem.parentLabel}

@@ -22,13 +22,45 @@ export function ExplanationScreen({
   })
 
   const nullCards = problem.cards.filter((c) => c.axisId === null)
+  const levelTag = problem.level === 2 ? 'Lv2 — ' : ''
 
   return (
     <div className={`${styles.layout} ${screenStyles.withStickyBar}`}>
       <div className={styles.main}>
         <header className={styles.header}>
-          <span className={styles.progress}>解説 — {problem.parentLabel}</span>
+          <span className={styles.progress}>
+            解説 — {levelTag}
+            {problem.parentLabel}
+          </span>
         </header>
+
+        {problem.level === 2 && problem.givenTree && (
+          <section className={styles.givenTree} aria-label="与えられたツリー">
+            <h2 className={styles.givenTitle}>与えられた1段目</h2>
+            <div className={styles.parentNode}>
+              {problem.givenTree.parentLabel}
+            </div>
+            {problem.givenTree.children.length > 0 && (
+              <>
+                <div className={styles.branchLine} aria-hidden="true" />
+                <div className={styles.children}>
+                  {problem.givenTree.children.map((label) => (
+                    <span
+                      key={label}
+                      className={
+                        label === problem.digTargetLabel
+                          ? styles.digTargetNode
+                          : styles.childCardStatic
+                      }
+                    >
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+          </section>
+        )}
 
         <h2 className={screenStyles.sectionHeading}>切り口の解説</h2>
         <div className={screenStyles.answerList}>
