@@ -1,19 +1,13 @@
 import { useMemo, useState } from 'react'
 import type { Card, LogicTreeProblem } from '../data/logicTreeProblems'
-import { DEFAULT_MENTOR_MESSAGES } from '../data/logicTreeProblems'
-import {
-  getAlreadySolvedMessage,
-  judgePlacedCards,
-  type JudgeResult,
-} from '../logic/judge'
 import { Mentor } from './Mentor'
 import styles from './QuestionScreen.module.css'
 
 type QuestionScreenProps = {
   problem: LogicTreeProblem
-  questionIndex: number
+  questionNumber: number
   totalQuestions: number
-  onNext: () => void
+  onSubmit: (placedCardIds: string[]) => void
 }
 
 function shuffleCards(cards: Card[]): Card[] {
@@ -27,22 +21,13 @@ function shuffleCards(cards: Card[]): Card[] {
 
 export function QuestionScreen({
   problem,
-  questionIndex,
+  questionNumber,
   totalQuestions,
-  onNext,
+  onSubmit,
 }: QuestionScreenProps) {
-  const [orderedCards, setOrderedCards] = useState<Card[]>(() =>
-    shuffleCards(problem.cards),
-  )
+  const [orderedCards] = useState<Card[]>(() => shuffleCards(problem.cards))
   const [placedIds, setPlacedIds] = useState<string[]>([])
-  const [solvedAxes, setSolvedAxes] = useState<Set<string>>(() => new Set())
-  const [judgeResult, setJudgeResult] = useState<JudgeResult | null>(null)
-  const [alreadySolved, setAlreadySolved] = useState(false)
-  const [mentorMessage, setMentorMessage] = useState<string>(
-    DEFAULT_MENTOR_MESSAGES.intro,
-  )
-  const [highlightIds, setHighlightIds] = useState<string[]>([])
-  const [showSuccessActions, setShowSuccessActions] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
   const placedSet = useMemo(() => new Set(placedIds), [placedIds])
   const poolCards = orderedCards.filter((c) => !placedSet.has(c.id))
@@ -50,78 +35,29 @@ export function QuestionScreen({
     .map((id) => problem.cards.find((c) => c.id === id))
     .filter((c): c is Card => c !== undefined)
 
-  const hasUnsolvedAxes = solvedAxes.size < problem.axes.length
-
   function placeCard(cardId: string) {
-    if (placedSet.has(cardId)) return
+    if (submitted || placedSet.has(cardId)) return
     setPlacedIds((prev) => [...prev, cardId])
-    resetFeedback()
   }
 
   function returnCard(cardId: string) {
+    if (submitted) return
     setPlacedIds((prev) => prev.filter((id) => id !== cardId))
-    resetFeedback()
   }
 
-  function resetFeedback() {
-    setJudgeResult(null)
-    setAlreadySolved(false)
-    setHighlightIds([])
-    setShowSuccessActions(false)
-    setMentorMessage(DEFAULT_MENTOR_MESSAGES.intro)
+  function handleSubmit() {
+    if (submitted || placedIds.length === 0) return
+    setSubmitted(true)
+    onSubmit(placedIds)
   }
-
-  function handleJudge() {
-    const result = judgePlacedCards(problem, placedIds)
-    setJudgeResult(result)
-    setAlreadySolved(false)
-
-    if (result.status === 'wrong') {
-      setHighlightIds(result.highlightCardIds)
-      setMentorMessage(result.mentorMessage)
-      setShowSuccessActions(false)
-      return
-    }
-
-    setHighlightIds([])
-
-    if (solvedAxes.has(result.axisId)) {
-      setAlreadySolved(true)
-      setMentorMessage(getAlreadySolvedMessage(problem))
-      setShowSuccessActions(true)
-      return
-    }
-
-    setSolvedAxes((prev) => new Set(prev).add(result.axisId))
-    setMentorMessage(result.mentorMessage)
-    setShowSuccessActions(true)
-  }
-
-  function handleRetryOtherAxis() {
-    setPlacedIds([])
-    setJudgeResult(null)
-    setAlreadySolved(false)
-    setHighlightIds([])
-    setShowSuccessActions(false)
-    setMentorMessage(DEFAULT_MENTOR_MESSAGES.intro)
-    setOrderedCards(shuffleCards(problem.cards))
-  }
-
-  const isCorrectNew = judgeResult?.status === 'correct' && !alreadySolved
-  const highlightSet = new Set(highlightIds)
 
   return (
     <div className={styles.layout}>
       <div className={styles.main}>
         <header className={styles.header}>
           <span className={styles.progress}>
-            問題 {questionIndex + 1} / {totalQuestions}
+            問題 {questionNumber} / {totalQuestions}
           </span>
-          {solvedAxes.size > 0 && (
-            <span className={styles.solvedTag}>
-              発見した切り口 {solvedAxes.size}/{problem.axes.length}
-            </span>
-          )}
         </header>
 
         <section className={styles.tree} aria-label="ロジックツリー">
@@ -137,14 +73,9 @@ export function QuestionScreen({
                 <button
                   key={card.id}
                   type="button"
-                  className={[
-                    styles.childCard,
-                    highlightSet.has(card.id) ? styles.highlighted : '',
-                    isCorrectNew ? styles.correctCard : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
+                  className={styles.childCard}
                   onClick={() => returnCard(card.id)}
+                  disabled={submitted}
                   aria-label={`${card.label}をプールに戻す`}
                 >
                   {card.label}
@@ -163,6 +94,7 @@ export function QuestionScreen({
                 type="button"
                 className={styles.poolCard}
                 onClick={() => placeCard(card.id)}
+                disabled={submitted}
               >
                 {card.label}
               </button>
@@ -177,35 +109,15 @@ export function QuestionScreen({
           <button
             type="button"
             className={styles.judgeBtn}
-            onClick={handleJudge}
-            disabled={placedIds.length === 0}
+            onClick={handleSubmit}
+            disabled={submitted || placedIds.length === 0}
           >
-            判定
+            提出
           </button>
-          {showSuccessActions && (
-            <>
-              <button
-                type="button"
-                className={styles.nextBtn}
-                onClick={onNext}
-              >
-                次へ
-              </button>
-              {hasUnsolvedAxes && (
-                <button
-                  type="button"
-                  className={styles.altBtn}
-                  onClick={handleRetryOtherAxis}
-                >
-                  別の切り口でも解く
-                </button>
-              )}
-            </>
-          )}
         </div>
       </div>
 
-      <Mentor message={mentorMessage} />
+      <Mentor message={problem.problemStatement} />
     </div>
   )
 }
