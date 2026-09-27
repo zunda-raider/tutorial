@@ -1,0 +1,84 @@
+.mentor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 220px;
+  flex-shrink: 0;
+}
+
+.portrait {
+  width: 140px;
+  text-align: center;
+}
+
+.portrait svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+}
+
+.name {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.dialogue {
+  width: 100%;
+  background: var(--dialog-bg);
+  border: 2px solid var(--accent-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-align: left;
+  position: relative;
+  box-shadow: var(--shadow);
+  min-height: 4.5em;
+}
+
+.dialogue::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--accent-border);
+}
+
+.dialogue p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--text-h);
+}
+
+@media (max-width: 720px) {
+  .mentor {
+    flex-direction: row;
+    max-width: none;
+    align-items: flex-start;
+  }
+
+  .portrait {
+    width: 88px;
+    flex-shrink: 0;
+  }
+
+  .dialogue {
+    min-height: 3.5em;
+  }
+
+  .dialogue::before {
+    top: 24px;
+    left: -8px;
+    transform: none;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid var(--accent-border);
+    border-left: none;
+  }
+}

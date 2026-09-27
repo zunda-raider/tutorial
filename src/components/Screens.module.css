@@ -1,0 +1,149 @@
+.screen {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.heroCard,
+.panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 32px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: none;
+}
+
+.title {
+  font-size: clamp(1.75rem, 5vw, 2.4rem);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+  color: var(--text-h);
+}
+
+.subtitle {
+  margin: 0 0 28px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.panelTitle {
+  font-size: 1.6rem;
+  margin: 0 0 8px;
+  color: var(--text-h);
+}
+
+.hint {
+  margin: 0 0 20px;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.menuList {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menuItem,
+.menuLocked {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.menuItem {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: var(--text-h);
+}
+
+.menuItem:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+.menuLocked {
+  background: var(--muted-bg);
+  color: var(--text);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.lockBadge,
+.openBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.lockBadge {
+  background: var(--border);
+  color: var(--text);
+}
+
+.openBadge {
+  background: var(--accent);
+  color: #fff;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s, opacity 0.15s;
+}
+
+.primaryBtn {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(79, 111, 216, 0.35);
+}
+
+.primaryBtn:hover {
+  transform: translateY(-1px);
+}
+
+.secondaryBtn {
+  background: transparent;
+  color: var(--text-h);
+  border: 1.5px solid var(--border);
+}
+
+.secondaryBtn:hover {
+  border-color: var(--accent);
+}
