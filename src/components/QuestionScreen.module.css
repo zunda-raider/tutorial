@@ -1,0 +1,195 @@
+.layout {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  padding: 16px;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.progress {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.solvedTag {
+  font-size: 0.8rem;
+  background: var(--accent-bg);
+  color: var(--text-h);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.tree {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 16px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.parentNode {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 12px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(79, 111, 216, 0.3);
+}
+
+.branchLine {
+  width: 2px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 auto;
+}
+
+.children {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  align-items: center;
+}
+
+.childCard,
+.poolCard {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-h);
+  transition: transform 0.1s, border-color 0.15s, background 0.15s;
+}
+
+.childCard:hover,
+.poolCard:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+.childCard {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.highlighted {
+  border-color: #e05353 !important;
+  background: rgba(224, 83, 83, 0.15) !important;
+  box-shadow: 0 0 0 2px rgba(224, 83, 83, 0.35);
+}
+
+.correctCard {
+  border-color: #2f9e6b !important;
+  background: rgba(47, 158, 107, 0.15) !important;
+}
+
+.pool {
+  background: var(--muted-bg);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.poolTitle {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: left;
+}
+
+.poolGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.emptyHint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding-bottom: 8px;
+}
+
+.judgeBtn,
+.nextBtn,
+.altBtn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.judgeBtn {
+  background: var(--accent);
+  color: #fff;
+}
+
+.judgeBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.nextBtn {
+  background: #2f9e6b;
+  color: #fff;
+}
+
+.altBtn {
+  background: transparent;
+  color: var(--text-h);
+  border: 1.5px solid var(--border);
+}
+
+.judgeBtn:hover:not(:disabled),
+.nextBtn:hover,
+.altBtn:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .layout {
+    flex-direction: column-reverse;
+  }
+}
