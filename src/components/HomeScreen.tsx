@@ -11,7 +11,6 @@ import styles from './Screens.module.css'
 type HomeScreenProps = {
   saveData: SaveData
   onLearn: () => void
-  onBackToTitle: () => void
   /** Dev-only reset; omit in production builds. */
   onResetSave?: () => void
 }
@@ -34,7 +33,6 @@ function formatDisplayDate(dateKey: string): string {
 export function HomeScreen({
   saveData,
   onLearn,
-  onBackToTitle,
   onResetSave,
 }: HomeScreenProps) {
   const todayKey = todayLocalDate()
@@ -118,14 +116,7 @@ export function HomeScreen({
         {/* Primary CTAs stay above calendar/scores so long content never buries them */}
         <div className={styles.homeActions}>
           <button type="button" className={styles.primaryBtn} onClick={onLearn}>
-            学習する
-          </button>
-          <button
-            type="button"
-            className={styles.secondaryBtn}
-            onClick={onBackToTitle}
-          >
-            タイトルへ
+            学習メニューへ
           </button>
         </div>
 

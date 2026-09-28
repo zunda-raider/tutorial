@@ -9,6 +9,61 @@
   overflow: auto;
 }
 
+/* Learning menu: mentor + theme list side-by-side (stack on narrow) */
+.menuLayout {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  padding: 16px;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: auto;
+}
+
+.menuLayout .panel {
+  flex: 1;
+  min-width: 0;
+  max-width: 480px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .menuLayout {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 12px 24px;
+  }
+
+  .menuLayout .panel {
+    max-width: none;
+  }
+}
+
+.textLink {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.textLink:hover {
+  color: var(--accent);
+  opacity: 1;
+}
+
 .heroCard,
 .panel,
 .homePanel {

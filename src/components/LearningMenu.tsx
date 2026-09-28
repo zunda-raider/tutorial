@@ -5,6 +5,7 @@ import {
   type ProblemLevel,
 } from '../data/logicTreeProblems'
 import type { SaveData } from '../storage/save'
+import { Mentor } from './Mentor'
 import styles from './Screens.module.css'
 
 type LearningMenuProps = {
@@ -16,7 +17,8 @@ type LearningMenuProps = {
   /** Lv2 に1問でも進捗がある（Lv1未クリアでも継続できるように） */
   lv2Started: boolean
   onSelectProblem: (problemId: string) => void
-  onBack: () => void
+  /** Calendar / progress home (de-emphasized; learning is the entry). */
+  onOpenHome: () => void
 }
 
 type ThemeItem = {
@@ -28,13 +30,16 @@ type ThemeItem = {
   lockHint?: string
 }
 
+const MENTOR_WELCOME =
+  'こんにちは！美椎です。テーマを開いて、解きたい問題を選んでみましょう。'
+
 export function LearningMenu({
   saveData,
   lv1Cleared,
   lv2Cleared,
   lv2Started,
   onSelectProblem,
-  onBack,
+  onOpenHome,
 }: LearningMenuProps) {
   const lv2Unlocked = lv1Cleared || lv2Started
   // Default-expand Lv1 so the theme is obviously interactive
@@ -77,7 +82,8 @@ export function LearningMenu({
   }
 
   return (
-    <div className={styles.screen}>
+    <div className={styles.menuLayout}>
+      <Mentor message={MENTOR_WELCOME} />
       <div className={styles.panel}>
         <h1 className={styles.panelTitle}>学習メニュー</h1>
         <p className={styles.hint}>
@@ -166,8 +172,12 @@ export function LearningMenu({
             )
           })}
         </ul>
-        <button type="button" className={styles.secondaryBtn} onClick={onBack}>
-          ホームへ
+        <button
+          type="button"
+          className={styles.textLink}
+          onClick={onOpenHome}
+        >
+          カレンダー・進捗を見る
         </button>
       </div>
     </div>
