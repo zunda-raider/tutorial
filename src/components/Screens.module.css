@@ -1,15 +1,17 @@
 .screen {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 24px 16px;
   width: 100%;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 .heroCard,
-.panel {
+.panel,
+.homePanel {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -18,6 +20,11 @@
   width: 100%;
   box-shadow: var(--shadow);
   text-align: center;
+}
+
+.homePanel {
+  max-width: 520px;
+  padding: 28px 24px;
 }
 
 .eyebrow {
@@ -42,6 +49,14 @@
   line-height: 1.5;
 }
 
+.todayLarge {
+  margin: 0 0 16px;
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  font-weight: 800;
+  color: var(--text-h);
+  letter-spacing: -0.02em;
+}
+
 .panelTitle {
   font-size: 1.6rem;
   margin: 0 0 8px;
@@ -64,13 +79,15 @@
 }
 
 .menuItem,
-.menuLocked {
+.menuLocked,
+.menuFinished {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 16px 16px;
+  min-height: 52px;
   border-radius: 12px;
   border: 1.5px solid var(--border);
   font-size: 1rem;
@@ -78,6 +95,10 @@
   cursor: pointer;
   font-family: inherit;
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .menuItem {
@@ -98,12 +119,26 @@
   opacity: 0.75;
 }
 
+.menuFinished {
+  background: var(--muted-bg);
+  color: var(--text-h);
+  cursor: pointer;
+  border-color: #2f9e6b;
+}
+
+.menuFinished:hover {
+  transform: translateY(-1px);
+  border-color: #248a5a;
+}
+
 .lockBadge,
-.openBadge {
+.openBadge,
+.scoreBadge {
   font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 8px;
   border-radius: 999px;
+  flex-shrink: 0;
 }
 
 .lockBadge {
@@ -113,6 +148,11 @@
 
 .openBadge {
   background: var(--accent);
+  color: #fff;
+}
+
+.scoreBadge {
+  background: #2f9e6b;
   color: #fff;
 }
 
@@ -126,6 +166,7 @@
   cursor: pointer;
   border: none;
   transition: transform 0.1s, opacity 0.15s;
+  min-height: 48px;
 }
 
 .primaryBtn {
@@ -146,4 +187,423 @@
 
 .secondaryBtn:hover {
   border-color: var(--accent);
+}
+
+/* Home CTAs — full-width stacked thumb targets near top of panel */
+.homeActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin: 0 0 20px;
+}
+
+.homeActions .primaryBtn,
+.homeActions .secondaryBtn {
+  width: 100%;
+  min-height: 52px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 16px 20px;
+  border-radius: 14px;
+  box-sizing: border-box;
+}
+
+.homeActions .secondaryBtn {
+  border-width: 2px;
+}
+
+.devResetBtn {
+  margin-top: 16px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px dashed #e05353;
+  background: transparent;
+  color: #e05353;
+}
+
+.devResetBtn:hover {
+  background: rgba(224, 83, 83, 0.08);
+}
+
+/* —— Calendar —— */
+.calendar {
+  text-align: center;
+  background: var(--muted-bg);
+  border-radius: 14px;
+  padding: 14px 12px 16px;
+}
+
+.calHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.calTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text-h);
+}
+
+.calNav {
+  font-family: inherit;
+  font-size: 1.4rem;
+  font-weight: 700;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-h);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.calNav:hover {
+  border-color: var(--accent);
+}
+
+.calWeekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.calWeekday {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text);
+  padding: 4px 0;
+}
+
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calEmpty {
+  aspect-ratio: 1;
+}
+
+.calDay {
+  aspect-ratio: 1;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1.5px solid transparent;
+  background: var(--card-bg);
+  color: var(--text-h);
+  cursor: default;
+  padding: 0;
+}
+
+.calDay:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.calToday {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.calMarked {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  cursor: pointer;
+  opacity: 1;
+}
+
+.calMarked:hover {
+  border-color: var(--accent);
+}
+
+.calSelected {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.dayDetail,
+.allScores {
+  margin-top: 16px;
+  text-align: left;
+}
+
+.dayDetailTitle {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--text-h);
+  text-align: left;
+}
+
+.scoreSummary {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.scoreSummary li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--muted-bg);
+  border-radius: 10px;
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.scoreHero {
+  text-align: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.scoreLabel {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.scoreValue {
+  margin: 4px 0 0;
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+/* Large primary actions — in-flow near content */
+.primaryActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.actionPrimary,
+.actionSecondary {
+  flex: 0 0 auto;
+  width: 100%;
+  font-family: inherit;
+  font-size: 1.15rem;
+  font-weight: 800;
+  padding: 18px 22px;
+  border-radius: 16px;
+  cursor: pointer;
+  border: none;
+  min-height: 56px;
+  letter-spacing: 0.02em;
+  transition: transform 0.1s, opacity 0.15s, border-color 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 480px) {
+  .primaryActions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .actionPrimary,
+  .actionSecondary {
+    flex: 1 1 140px;
+    width: auto;
+  }
+}
+
+.actionPrimary {
+  background: #1f8a58;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(31, 138, 88, 0.45);
+}
+
+.actionSecondary {
+  background: var(--card-bg);
+  color: var(--text-h);
+  border: 2.5px solid var(--text-h);
+  box-shadow: 0 4px 12px rgba(40, 30, 70, 0.12);
+}
+
+.actionPrimary:hover,
+.actionSecondary:hover {
+  transform: translateY(-1px);
+}
+
+.actionPrimary:hover {
+  box-shadow: 0 8px 22px rgba(31, 138, 88, 0.55);
+}
+
+.actionSecondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Wrapper keeps sticky bar OUT of the scoring/explanation row flex */
+.pageWithSticky {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+/*
+ * Sticky bottom bar:
+ * - No transform (Safari desyncs visual vs touch hit-testing with
+ *   position:fixed + transform).
+ * - pointer-events only on the bar itself (not a full-screen overlay);
+ *   children re-enable clicks on the buttons.
+ * - Not a flex item of the horizontal/column-reverse layout.
+ */
+.stickyActionBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: var(--card-bg);
+  border-top: 2px solid var(--border);
+  box-shadow: 0 -10px 28px rgba(40, 30, 70, 0.16);
+  pointer-events: auto;
+  /* Prevent flex ancestors from stretching this if misplaced */
+  align-self: center;
+  height: auto;
+  max-height: none;
+}
+
+.stickyActionBar .actionPrimary,
+.stickyActionBar .actionSecondary {
+  flex: 1;
+  pointer-events: auto;
+}
+
+/* Nested problem picker under a learning theme */
+.problemList {
+  list-style: none;
+  margin: 8px 0 4px;
+  padding: 0 0 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 3px solid var(--accent-border);
+  position: relative;
+  z-index: 1;
+}
+
+.problemItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 14px;
+  min-height: 52px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-h);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.problemItem:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  background: var(--accent-bg);
+}
+
+.problemLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.problemIndex {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.sectionHeading {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--text-h);
+  text-align: left;
+}
+
+.answerList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.answerBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.axisName {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.axisExplanation {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text);
+  text-align: left;
 }
