@@ -4,7 +4,6 @@ import { HomeScreen } from './components/HomeScreen'
 import { LearningMenu } from './components/LearningMenu'
 import { QuestionScreen } from './components/QuestionScreen'
 import { ScoringScreen } from './components/ScoringScreen'
-import { TitleScreen } from './components/TitleScreen'
 import {
   allProblemsSolved,
   getProblemById,
@@ -24,7 +23,6 @@ import {
 import './App.css'
 
 type Screen =
-  | { kind: 'title' }
   | { kind: 'home' }
   | { kind: 'menu' }
   | { kind: 'question'; problemId: string }
@@ -47,7 +45,8 @@ function requireProblem(id: string) {
 }
 
 function App() {
-  const [screen, setScreen] = useState<Screen>({ kind: 'title' })
+  // Start directly on Learning menu (skip title gate).
+  const [screen, setScreen] = useState<Screen>({ kind: 'menu' })
   const [saveData, setSaveData] = useState<SaveData>(() => saveStore.load())
 
   const persist = useCallback((next: SaveData) => {
@@ -61,10 +60,6 @@ function App() {
 
   function goHome() {
     setScreen({ kind: 'home' })
-  }
-
-  function goTitle() {
-    setScreen({ kind: 'title' })
   }
 
   function goMenu() {
@@ -121,13 +116,10 @@ function App() {
 
   return (
     <div className="app-shell">
-      {screen.kind === 'title' && <TitleScreen onStart={goHome} />}
-
       {screen.kind === 'home' && (
         <HomeScreen
           saveData={saveData}
           onLearn={goMenu}
-          onBackToTitle={goTitle}
           onResetSave={import.meta.env.DEV ? resetSave : undefined}
         />
       )}
@@ -139,7 +131,7 @@ function App() {
           lv2Cleared={lv2Cleared}
           lv2Started={problemsForLevel(2).some((p) => solvedIds.has(p.id))}
           onSelectProblem={startProblem}
-          onBack={goHome}
+          onOpenHome={goHome}
         />
       )}
 
