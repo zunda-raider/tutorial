@@ -12,6 +12,8 @@ type CalendarProgressProps = {
   saveData: SaveData
   /** Dev-only reset; omit in production builds. */
   onResetSave?: () => void
+  /** When false, omit the large date (shown above by the home screen). */
+  showDateHeader?: boolean
 }
 
 const WEEKDAY_LABELS = ['日', '月', '火', '水', '木', '金', '土'] as const
@@ -33,6 +35,7 @@ function formatDisplayDate(dateKey: string): string {
 export function CalendarProgress({
   saveData,
   onResetSave,
+  showDateHeader = true,
 }: CalendarProgressProps) {
   const todayKey = todayLocalDate()
   const today = useMemo(() => {
@@ -108,8 +111,14 @@ export function CalendarProgress({
 
   return (
     <section className={styles.progressSection} aria-label="カレンダーと進捗">
-      <p className={styles.eyebrow}>カレンダー・進捗</p>
-      <p className={styles.todayLarge}>{formatDisplayDate(todayKey)}</p>
+      {showDateHeader ? (
+        <>
+          <p className={styles.eyebrow}>カレンダー・進捗</p>
+          <p className={styles.todayLarge}>{formatDisplayDate(todayKey)}</p>
+        </>
+      ) : (
+        <p className={styles.eyebrow}>カレンダー</p>
+      )}
 
       <section className={styles.calendar} aria-label="月カレンダー">
         <div className={styles.calHeader}>

@@ -17,6 +17,17 @@
   padding: 4px 0 8px;
 }
 
+/* Phone home: character column on the left of the hero stage */
+.mentorPresenting {
+  max-width: none;
+  width: auto;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+
 .portrait {
   width: 140px;
   text-align: center;
@@ -25,6 +36,10 @@
 
 .mentorHero .portrait {
   width: 96px;
+}
+
+.mentorPresenting .portrait {
+  width: clamp(108px, 34vw, 140px);
 }
 
 .portrait svg {
@@ -43,7 +58,7 @@
   width: 100%;
 }
 
-.mentor:not(.mentorHero) .identity {
+.mentor:not(.mentorHero):not(.mentorPresenting) .identity {
   align-items: center;
   text-align: center;
 }
@@ -79,6 +94,24 @@
   letter-spacing: 0.04em;
 }
 
+.presentingName {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-h);
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.presentingNameEn {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
 .dialogue {
   width: 100%;
   background: var(--dialog-bg);
@@ -92,11 +125,11 @@
   box-sizing: border-box;
 }
 
-.mentor:not(.mentorHero) .dialogue {
+.mentor:not(.mentorHero):not(.mentorPresenting) .dialogue {
   min-height: 4.5em;
 }
 
-.mentor:not(.mentorHero) .dialogue::before {
+.mentor:not(.mentorHero):not(.mentorPresenting) .dialogue::before {
   content: '';
   position: absolute;
   top: -8px;
@@ -125,26 +158,26 @@
 }
 
 @media (max-width: 720px) {
-  .mentor:not(.mentorHero) {
+  .mentor:not(.mentorHero):not(.mentorPresenting) {
     flex-direction: row;
     max-width: none;
     align-items: flex-start;
   }
 
-  .mentor:not(.mentorHero) .portrait {
+  .mentor:not(.mentorHero):not(.mentorPresenting) .portrait {
     width: 88px;
   }
 
-  .mentor:not(.mentorHero) .identity {
+  .mentor:not(.mentorHero):not(.mentorPresenting) .identity {
     align-items: flex-start;
     text-align: left;
   }
 
-  .mentor:not(.mentorHero) .dialogue {
+  .mentor:not(.mentorHero):not(.mentorPresenting) .dialogue {
     min-height: 3.5em;
   }
 
-  .mentor:not(.mentorHero) .dialogue::before {
+  .mentor:not(.mentorHero):not(.mentorPresenting) .dialogue::before {
     top: 24px;
     left: -8px;
     transform: none;
@@ -163,5 +196,9 @@
 
   .nameHero {
     font-size: clamp(1.85rem, 10vw, 2.4rem);
+  }
+
+  .mentorPresenting .portrait {
+    width: clamp(96px, 32vw, 120px);
   }
 }
