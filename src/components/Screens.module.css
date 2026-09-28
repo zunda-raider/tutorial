@@ -9,38 +9,37 @@
   overflow: auto;
 }
 
-/* Learning menu: mentor + theme list side-by-side (stack on narrow) */
-.menuLayout {
+/* Unified home/learning: single phone scroll (mentor → menu → calendar) */
+.homeScroll {
   flex: 1;
   display: flex;
-  gap: 20px;
-  padding: 16px;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 12px 32px;
   width: 100%;
-  max-width: 860px;
+  max-width: 480px;
   margin: 0 auto;
   box-sizing: border-box;
-  align-items: flex-start;
-  justify-content: center;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.menuLayout .panel {
-  flex: 1;
-  min-width: 0;
-  max-width: 480px;
+.homeHero {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.homeScroll .panel,
+.homeScroll .homePanel {
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24px 18px;
   text-align: center;
 }
 
-@media (max-width: 720px) {
-  .menuLayout {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 16px 12px 24px;
-  }
-
-  .menuLayout .panel {
-    max-width: none;
-  }
+.progressSection {
+  text-align: center;
 }
 
 .textLink {

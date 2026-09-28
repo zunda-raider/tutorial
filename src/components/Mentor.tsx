@@ -2,12 +2,18 @@ import styles from './Mentor.module.css'
 
 type MentorProps = {
   message: string
+  /** Hero: large name above the fold for the home/learning screen. */
+  size?: 'default' | 'hero'
 }
 
 /** Mentor「美椎（ミーシー）」— adult female learning-method consultant (placeholder SVG). */
-export function Mentor({ message }: MentorProps) {
+export function Mentor({ message, size = 'default' }: MentorProps) {
+  const isHero = size === 'hero'
   return (
-    <aside className={styles.mentor} aria-label="メンター 美椎">
+    <aside
+      className={isHero ? `${styles.mentor} ${styles.mentorHero}` : styles.mentor}
+      aria-label="メンター 美椎"
+    >
       <div className={styles.portrait} aria-hidden="true">
         <svg viewBox="0 0 160 220" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -58,10 +64,14 @@ export function Mentor({ message }: MentorProps) {
           <ellipse cx="55" cy="100" rx="7" ry="4" fill="#f0a090" opacity="0.45" />
           <ellipse cx="105" cy="100" rx="7" ry="4" fill="#f0a090" opacity="0.45" />
         </svg>
-        <p className={styles.name}>美椎（ミーシー）</p>
       </div>
-      <div className={styles.dialogue} role="status">
-        <p>{message}</p>
+      <div className={styles.identity}>
+        <p className={isHero ? styles.nameHero : styles.name}>美椎</p>
+        {isHero && <p className={styles.nameEn}>Meese</p>}
+        {!isHero && <p className={styles.nameSub}>（ミーシー）</p>}
+        <div className={styles.dialogue} role="status">
+          <p>{message}</p>
+        </div>
       </div>
     </aside>
   )

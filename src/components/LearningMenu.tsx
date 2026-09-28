@@ -5,6 +5,7 @@ import {
   type ProblemLevel,
 } from '../data/logicTreeProblems'
 import type { SaveData } from '../storage/save'
+import { CalendarProgress } from './CalendarProgress'
 import { Mentor } from './Mentor'
 import styles from './Screens.module.css'
 
@@ -17,8 +18,8 @@ type LearningMenuProps = {
   /** Lv2 に1問でも進捗がある（Lv1未クリアでも継続できるように） */
   lv2Started: boolean
   onSelectProblem: (problemId: string) => void
-  /** Calendar / progress home (de-emphasized; learning is the entry). */
-  onOpenHome: () => void
+  /** Dev-only reset; omit in production builds. */
+  onResetSave?: () => void
 }
 
 type ThemeItem = {
@@ -31,7 +32,7 @@ type ThemeItem = {
 }
 
 const MENTOR_WELCOME =
-  'こんにちは！美椎です。テーマを開いて、解きたい問題を選んでみましょう。'
+  'こんにちは！テーマを開いて、解きたい問題を選んでみましょう。'
 
 export function LearningMenu({
   saveData,
@@ -39,7 +40,7 @@ export function LearningMenu({
   lv2Cleared,
   lv2Started,
   onSelectProblem,
-  onOpenHome,
+  onResetSave,
 }: LearningMenuProps) {
   const lv2Unlocked = lv1Cleared || lv2Started
   // Default-expand Lv1 so the theme is obviously interactive
@@ -82,9 +83,14 @@ export function LearningMenu({
   }
 
   return (
-    <div className={styles.menuLayout}>
-      <Mentor message={MENTOR_WELCOME} />
-      <div className={styles.panel}>
+    <div className={styles.homeScroll}>
+      {/* 1. Mentor hero — 美椎 large above the fold */}
+      <header className={styles.homeHero}>
+        <Mentor message={MENTOR_WELCOME} size="hero" />
+      </header>
+
+      {/* 2. Learning themes / problems */}
+      <section className={styles.panel} aria-label="学習メニュー">
         <h1 className={styles.panelTitle}>学習メニュー</h1>
         <p className={styles.hint}>
           テーマを開き、解きたい問題を選んでください（クリア済みも再挑戦可）
@@ -172,13 +178,11 @@ export function LearningMenu({
             )
           })}
         </ul>
-        <button
-          type="button"
-          className={styles.textLink}
-          onClick={onOpenHome}
-        >
-          カレンダー・進捗を見る
-        </button>
+      </section>
+
+      {/* 3. Calendar + progress (former Home) */}
+      <div className={styles.homePanel}>
+        <CalendarProgress saveData={saveData} onResetSave={onResetSave} />
       </div>
     </div>
   )

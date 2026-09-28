@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
 import { ExplanationScreen } from './components/ExplanationScreen'
-import { HomeScreen } from './components/HomeScreen'
 import { LearningMenu } from './components/LearningMenu'
 import { QuestionScreen } from './components/QuestionScreen'
 import { ScoringScreen } from './components/ScoringScreen'
@@ -23,7 +22,6 @@ import {
 import './App.css'
 
 type Screen =
-  | { kind: 'home' }
   | { kind: 'menu' }
   | { kind: 'question'; problemId: string }
   | {
@@ -45,7 +43,7 @@ function requireProblem(id: string) {
 }
 
 function App() {
-  // Start directly on Learning menu (skip title gate).
+  // Unified home/learning screen (mentor + menu + calendar).
   const [screen, setScreen] = useState<Screen>({ kind: 'menu' })
   const [saveData, setSaveData] = useState<SaveData>(() => saveStore.load())
 
@@ -57,10 +55,6 @@ function App() {
   const solvedIds = new Set(Object.keys(saveData.problems))
   const lv1Cleared = allProblemsSolved(solvedIds, 1)
   const lv2Cleared = allProblemsSolved(solvedIds, 2)
-
-  function goHome() {
-    setScreen({ kind: 'home' })
-  }
 
   function goMenu() {
     setScreen({ kind: 'menu' })
@@ -90,7 +84,7 @@ function App() {
 
   /**
    * From scoring「ホームへ戻る」:
-   * score ≤ AUTO_EXPLANATION_THRESHOLD → Explanation; otherwise Home.
+   * score ≤ AUTO_EXPLANATION_THRESHOLD → Explanation; otherwise menu.
    */
   function handleScoringGoHome(
     problemId: string,
@@ -100,7 +94,7 @@ function App() {
       showExplanation(problemId, result.targetAxisId)
       return
     }
-    goHome()
+    goMenu()
   }
 
   function resetSave() {
@@ -116,14 +110,6 @@ function App() {
 
   return (
     <div className="app-shell">
-      {screen.kind === 'home' && (
-        <HomeScreen
-          saveData={saveData}
-          onLearn={goMenu}
-          onResetSave={import.meta.env.DEV ? resetSave : undefined}
-        />
-      )}
-
       {screen.kind === 'menu' && (
         <LearningMenu
           saveData={saveData}
@@ -131,7 +117,7 @@ function App() {
           lv2Cleared={lv2Cleared}
           lv2Started={problemsForLevel(2).some((p) => solvedIds.has(p.id))}
           onSelectProblem={startProblem}
-          onOpenHome={goHome}
+          onResetSave={import.meta.env.DEV ? resetSave : undefined}
         />
       )}
 
@@ -163,7 +149,7 @@ function App() {
         <ExplanationScreen
           problem={requireProblem(screen.problemId)}
           targetAxisId={screen.targetAxisId}
-          onBackToHome={goHome}
+          onBackToHome={goMenu}
         />
       )}
     </div>
