@@ -21,7 +21,6 @@ export function ExplanationScreen({
     return 0
   })
 
-  const nullCards = problem.cards.filter((c) => c.axisId === null)
   const levelTag = problem.level === 2 ? 'Lv2 — ' : ''
 
   return (
@@ -72,22 +71,6 @@ export function ExplanationScreen({
           ))}
         </div>
 
-        {nullCards.length > 0 && (
-          <section
-            className={screenStyles.nullSection}
-            aria-label="関係ない要素"
-          >
-            <h2 className={screenStyles.sectionHeading}>関係ない要素</h2>
-            <ul className={screenStyles.nullList}>
-              {nullCards.map((card) => (
-                <li key={card.id}>
-                  <strong>{card.label}</strong>
-                  <span> — {card.nullReason ?? '関係ない要素'}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
       </div>
 
       <Mentor message={problem.summaryExplanation} />

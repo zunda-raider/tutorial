@@ -8,8 +8,6 @@ export type Card = {
   id: string
   label: string
   axisId: string | null
-  /** Why this card is irrelevant — only for axisId === null */
-  nullReason?: string
 }
 
 /** First-level tree shown to the player (Lv2); not guessed. */
@@ -49,10 +47,10 @@ export const logicTreeProblems: LogicTreeProblem[] = [
     id: 'cafe-sales',
     level: 1,
     problemStatement:
-      '駅前のカフェの売上を分解してみよう。モレなく、ダブりなくね',
+      '駅前のカフェの売上を分解してみよう',
     parentLabel: 'カフェの売上',
     summaryExplanation:
-      '迷ったら、まず掛け算か足し算で分けられないか考えよう。要因（なぜ）と構成要素（何でできているか）を混ぜないのが大事だよ',
+      '迷ったら、まず掛け算か足し算で分けられないか考えよう。要因（なぜ）と構成要素（何でできているか）を区別するのが大事だよ',
     axes: [
       {
         id: 'multiply',
@@ -84,14 +82,11 @@ export const logicTreeProblems: LogicTreeProblem[] = [
         id: 'c7',
         label: '店長のやる気',
         axisId: null,
-        nullReason:
-          '売上の中身ではなく、売上に影響するかもしれない要因。分解ではなく原因の話',
       },
       {
         id: 'c8',
         label: '天気',
         axisId: null,
-        nullReason: 'これも要因。売上を分けた結果には出てこない',
       },
     ],
   },
@@ -111,7 +106,7 @@ export const logicTreeProblems: LogicTreeProblem[] = [
       {
         id: 'product',
         name: '商品区分',
-        explanation: '商品で分けるなら「その他」を入れてモレを防ぐ',
+        explanation: '商品で分けるなら「その他」も含めて考えよう',
       },
     ],
     cards: [
@@ -124,14 +119,11 @@ export const logicTreeProblems: LogicTreeProblem[] = [
         id: 'p6',
         label: '立地',
         axisId: null,
-        nullReason: '利益に影響する要因で、利益の構成要素ではない',
       },
       {
         id: 'p7',
         label: '店員の数',
         axisId: null,
-        nullReason:
-          '費用の一部をさらに分けたときに出てくる要素。この段には早すぎる',
       },
     ],
   },
@@ -141,7 +133,7 @@ export const logicTreeProblems: LogicTreeProblem[] = [
     problemStatement: 'ある会社の従業員数を分けてみよう。分け方はいくつもあるよ',
     parentLabel: '会社の従業員数',
     summaryExplanation:
-      '「Aと、A以外」はモレをなくす最強の型。困ったらこれを使おう',
+      '「Aと、A以外」のように、全体を捉えやすい形で分けてみよう',
     axes: [
       {
         id: 'employment',
@@ -152,12 +144,12 @@ export const logicTreeProblems: LogicTreeProblem[] = [
         id: 'location',
         name: '勤務地',
         explanation:
-          '「東京」と「東京以外」のように、AとA以外で分けるとモレが出ない',
+          '「東京」と「東京以外」のように、全体を捉えやすく分けられる',
       },
       {
         id: 'department',
         name: '部門',
-        explanation: '部門が多いときも「〜以外」でまとめればMECEになる',
+        explanation: '部門が多いときは「〜以外」でまとめると整理しやすい',
       },
     ],
     cards: [
@@ -171,13 +163,11 @@ export const logicTreeProblems: LogicTreeProblem[] = [
         id: 'e7',
         label: '残業時間',
         axisId: null,
-        nullReason: '人数ではなく働き方の指標',
       },
       {
         id: 'e8',
         label: '平均年齢',
         axisId: null,
-        nullReason: '従業員の属性の平均で、人数の内訳ではない',
       },
     ],
   },
@@ -218,14 +208,11 @@ export const logicTreeProblems: LogicTreeProblem[] = [
         id: 'l2a5',
         label: '客単価',
         axisId: null,
-        nullReason:
-          'すでに1段目の兄弟ノード。客数の下ではなく、売上の直下に置くもの',
       },
       {
         id: 'l2a6',
         label: '天気',
         axisId: null,
-        nullReason: '客数に影響する要因で、客数の構成要素ではない',
       },
     ],
   },
@@ -233,7 +220,7 @@ export const logicTreeProblems: LogicTreeProblem[] = [
     id: 'cafe-sales-lv2-channel',
     level: 2,
     problemStatement:
-      '今度は売上そのものを販売チャネルで分けてみよう。関係ないカードに注意してね',
+      '今度は売上そのものを販売チャネルで分けてみよう。カードの意味にも目を向けてね',
     parentLabel: 'カフェの売上',
     digTargetLabel: 'カフェの売上',
     givenTree: {
@@ -264,13 +251,11 @@ export const logicTreeProblems: LogicTreeProblem[] = [
         id: 'l2b5',
         label: '広告',
         axisId: null,
-        nullReason: '売上の内訳ではなく、集客のための施策・費用側の話',
       },
       {
         id: 'l2b6',
         label: 'セミナー',
         axisId: null,
-        nullReason: 'カフェの本業売上の分解ではなく、別の事業や施策',
       },
     ],
   },
@@ -310,13 +295,11 @@ export const logicTreeProblems: LogicTreeProblem[] = [
         id: 'l2c6',
         label: '売上',
         axisId: null,
-        nullReason: '利益の直下の兄弟。費用の下ではなく、利益＝売上−費用の側',
       },
       {
         id: 'l2c7',
         label: '立地',
         axisId: null,
-        nullReason: '費用に影響する要因で、費用の構成要素ではない',
       },
     ],
   },

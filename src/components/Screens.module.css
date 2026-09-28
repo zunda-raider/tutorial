@@ -471,19 +471,3 @@
   color: var(--text);
   text-align: left;
 }
-
-.nullSection {
-  text-align: left;
-}
-
-.nullList {
-  margin: 8px 0 0;
-  padding: 0 0 0 1.1em;
-  color: var(--text);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
-.nullList strong {
-  color: var(--text-h);
-}
