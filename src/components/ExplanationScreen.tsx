@@ -24,58 +24,64 @@ export function ExplanationScreen({
   const levelTag = problem.level === 2 ? 'Lv2 — ' : ''
 
   return (
-    <div className={`${styles.layout} ${screenStyles.withStickyBar}`}>
-      <div className={styles.main}>
-        <header className={styles.header}>
-          <span className={styles.progress}>
-            解説 — {levelTag}
-            {problem.parentLabel}
-          </span>
-        </header>
+    <div className={screenStyles.pageWithSticky}>
+      <div className={styles.layout}>
+        <div className={styles.main}>
+          <header className={styles.header}>
+            <span className={styles.progress}>
+              解説 — {levelTag}
+              {problem.parentLabel}
+            </span>
+          </header>
 
-        {problem.level === 2 && problem.givenTree && (
-          <section className={styles.givenTree} aria-label="与えられたツリー">
-            <h2 className={styles.givenTitle}>与えられた1段目</h2>
-            <div className={styles.parentNode}>
-              {problem.givenTree.parentLabel}
-            </div>
-            {problem.givenTree.children.length > 0 && (
-              <>
-                <div className={styles.branchLine} aria-hidden="true" />
-                <div className={styles.children}>
-                  {problem.givenTree.children.map((label) => (
-                    <span
-                      key={label}
-                      className={
-                        label === problem.digTargetLabel
-                          ? styles.digTargetNode
-                          : styles.childCardStatic
-                      }
-                    >
-                      {label}
-                    </span>
-                  ))}
-                </div>
-              </>
-            )}
-          </section>
-        )}
+          {problem.level === 2 && problem.givenTree && (
+            <section className={styles.givenTree} aria-label="与えられたツリー">
+              <h2 className={styles.givenTitle}>与えられた1段目</h2>
+              <div className={styles.parentNode}>
+                {problem.givenTree.parentLabel}
+              </div>
+              {problem.givenTree.children.length > 0 && (
+                <>
+                  <div className={styles.branchLine} aria-hidden="true" />
+                  <div className={styles.children}>
+                    {problem.givenTree.children.map((label) => (
+                      <span
+                        key={label}
+                        className={
+                          label === problem.digTargetLabel
+                            ? styles.digTargetNode
+                            : styles.childCardStatic
+                        }
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+            </section>
+          )}
 
-        <h2 className={screenStyles.sectionHeading}>切り口の解説</h2>
-        <div className={screenStyles.answerList}>
-          {orderedAxes.map((axis) => (
-            <div key={axis.id} className={screenStyles.answerBlock}>
-              <h3 className={screenStyles.axisName}>{axis.name}</h3>
-              <p className={screenStyles.axisExplanation}>{axis.explanation}</p>
-            </div>
-          ))}
+          <h2 className={screenStyles.sectionHeading}>切り口の解説</h2>
+          <div className={screenStyles.answerList}>
+            {orderedAxes.map((axis) => (
+              <div key={axis.id} className={screenStyles.answerBlock}>
+                <h3 className={screenStyles.axisName}>{axis.name}</h3>
+                <p className={screenStyles.axisExplanation}>{axis.explanation}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
+        <Mentor message={problem.summaryExplanation} />
       </div>
 
-      <Mentor message={problem.summaryExplanation} />
-
-      <div className={screenStyles.stickyActionBar} role="group" aria-label="解説後の操作">
+      {/* Sibling of layout (not a flex row child) — avoids stretch / transform hit bugs */}
+      <div
+        className={screenStyles.stickyActionBar}
+        role="group"
+        aria-label="解説後の操作"
+      >
         <button
           type="button"
           className={screenStyles.actionPrimary}

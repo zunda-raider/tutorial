@@ -37,7 +37,8 @@ export function LearningMenu({
   onBack,
 }: LearningMenuProps) {
   const lv2Unlocked = lv1Cleared || lv2Started
-  const [expandedLevel, setExpandedLevel] = useState<ProblemLevel | null>(null)
+  // Default-expand Lv1 so the theme is obviously interactive
+  const [expandedLevel, setExpandedLevel] = useState<ProblemLevel | null>(1)
 
   const items: ThemeItem[] = [
     {
@@ -84,8 +85,9 @@ export function LearningMenu({
         </p>
         <ul className={styles.menuList}>
           {items.map((item) => {
+            const isExpandable = item.level !== undefined && !item.locked
             const isExpanded =
-              item.level !== undefined && expandedLevel === item.level
+              isExpandable && expandedLevel === item.level
 
             return (
               <li key={item.id}>
@@ -99,9 +101,9 @@ export function LearningMenu({
                         : styles.menuItem
                   }
                   disabled={item.locked}
-                  aria-expanded={item.level !== undefined ? isExpanded : undefined}
+                  aria-expanded={isExpandable ? isExpanded : undefined}
                   onClick={() => {
-                    if (item.locked || item.level === undefined) return
+                    if (!isExpandable || item.level === undefined) return
                     toggleLevel(item.level)
                   }}
                 >
@@ -127,7 +129,10 @@ export function LearningMenu({
                 </button>
 
                 {isExpanded && item.level !== undefined && (
-                  <ul className={styles.problemList} aria-label={`${item.label}の問題一覧`}>
+                  <ul
+                    className={styles.problemList}
+                    aria-label={`${item.label}の問題一覧`}
+                  >
                     {problemsForLevel(item.level).map((problem, index) => {
                       const entry = saveData.problems[problem.id]
                       const solved = Boolean(entry)

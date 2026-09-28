@@ -115,6 +115,20 @@ export function HomeScreen({
         <p className={styles.eyebrow}>ホーム</p>
         <p className={styles.todayLarge}>{formatDisplayDate(todayKey)}</p>
 
+        {/* Primary CTAs stay above calendar/scores so long content never buries them */}
+        <div className={styles.homeActions}>
+          <button type="button" className={styles.primaryBtn} onClick={onLearn}>
+            学習する
+          </button>
+          <button
+            type="button"
+            className={styles.secondaryBtn}
+            onClick={onBackToTitle}
+          >
+            タイトルへ
+          </button>
+        </div>
+
         <section className={styles.calendar} aria-label="月カレンダー">
           <div className={styles.calHeader}>
             <button
@@ -238,19 +252,6 @@ export function HomeScreen({
             </ul>
           </section>
         )}
-
-        <div className={styles.homeActions}>
-          <button type="button" className={styles.primaryBtn} onClick={onLearn}>
-            学習する
-          </button>
-          <button
-            type="button"
-            className={styles.secondaryBtn}
-            onClick={onBackToTitle}
-          >
-            タイトルへ
-          </button>
-        </div>
 
         {onResetSave && (
           <button
