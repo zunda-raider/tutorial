@@ -7,10 +7,8 @@ import { ScoringScreen } from './components/ScoringScreen'
 import { TitleScreen } from './components/TitleScreen'
 import {
   allProblemsSolved,
-  firstUnsolvedProblem,
   getProblemById,
   problemsForLevel,
-  type ProblemLevel,
 } from './data/logicTreeProblems'
 import {
   AUTO_EXPLANATION_THRESHOLD,
@@ -73,10 +71,9 @@ function App() {
     setScreen({ kind: 'menu' })
   }
 
-  function startLogicTree(level: ProblemLevel) {
-    const next = firstUnsolvedProblem(solvedIds, level)
-    if (!next) return
-    setScreen({ kind: 'question', problemId: next.id })
+  function startProblem(problemId: string) {
+    requireProblem(problemId)
+    setScreen({ kind: 'question', problemId })
   }
 
   function handleSubmit(problemId: string, placedCardIds: string[]) {
@@ -137,11 +134,11 @@ function App() {
 
       {screen.kind === 'menu' && (
         <LearningMenu
+          saveData={saveData}
           lv1Cleared={lv1Cleared}
           lv2Cleared={lv2Cleared}
           lv2Started={problemsForLevel(2).some((p) => solvedIds.has(p.id))}
-          onSelectLogicTreeLv1={() => startLogicTree(1)}
-          onSelectLogicTreeLv2={() => startLogicTree(2)}
+          onSelectProblem={startProblem}
           onBack={goHome}
         />
       )}

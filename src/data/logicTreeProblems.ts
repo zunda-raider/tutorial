@@ -39,7 +39,7 @@ export type LogicTreeProblem = {
 
 /**
  * Problem order for the learning flow.
- * Within each level, the first unsolved problem is started from the menu.
+ * The learning menu lists every problem; solved ones stay replayable.
  */
 export const logicTreeProblems: LogicTreeProblem[] = [
   // ——— Level 1 ———
@@ -311,14 +311,6 @@ export function getProblemById(id: string): LogicTreeProblem | undefined {
 
 export function problemsForLevel(level: ProblemLevel): LogicTreeProblem[] {
   return logicTreeProblems.filter((p) => p.level === level)
-}
-
-/** First problem in the given level that is not yet in the solved set. */
-export function firstUnsolvedProblem(
-  solvedIds: ReadonlySet<string>,
-  level: ProblemLevel = 1,
-): LogicTreeProblem | undefined {
-  return problemsForLevel(level).find((p) => !solvedIds.has(p.id))
 }
 
 export function allProblemsSolved(

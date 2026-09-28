@@ -33,7 +33,7 @@ export function ScoringScreen({
   const isLv2 = problem.level === 2
 
   return (
-    <div className={styles.layout}>
+    <div className={`${styles.layout} ${screenStyles.withStickyBar}`}>
       <div className={styles.main}>
         <header className={styles.header}>
           <span className={styles.progress}>
@@ -49,27 +49,6 @@ export function ScoringScreen({
         <div className={screenStyles.scoreHero}>
           <p className={screenStyles.scoreLabel}>スコア</p>
           <p className={screenStyles.scoreValue}>{result.score}</p>
-        </div>
-
-        <div
-          className={screenStyles.primaryActions}
-          role="group"
-          aria-label="採点後の操作"
-        >
-          <button
-            type="button"
-            className={screenStyles.actionPrimary}
-            onClick={onShowExplanation}
-          >
-            解説を見る
-          </button>
-          <button
-            type="button"
-            className={screenStyles.actionSecondary}
-            onClick={onGoHome}
-          >
-            ホームへ戻る
-          </button>
         </div>
 
         {isLv2 && problem.givenTree && (
@@ -127,6 +106,27 @@ export function ScoringScreen({
       </div>
 
       <Mentor message={result.mentorMessage} />
+
+      <div
+        className={screenStyles.stickyActionBar}
+        role="group"
+        aria-label="採点後の操作"
+      >
+        <button
+          type="button"
+          className={screenStyles.actionPrimary}
+          onClick={onShowExplanation}
+        >
+          解説を見る
+        </button>
+        <button
+          type="button"
+          className={screenStyles.actionSecondary}
+          onClick={onGoHome}
+        >
+          ホームへ戻る
+        </button>
+      </div>
     </div>
   )
 }

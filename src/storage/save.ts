@@ -7,11 +7,11 @@
  */
 
 export type ProblemSave = {
-  /** Final score on first submit (immutable thereafter). */
+  /** Latest submit score (overwritten on replay). */
   score: number
   /** Target axis id the player was judged against; null if none. */
   targetAxisId: string | null
-  /** Device-local calendar date of submit, YYYY-MM-DD. */
+  /** Device-local calendar date of latest submit, YYYY-MM-DD. */
   solvedDate: string
 }
 
@@ -98,6 +98,7 @@ export function todayLocalDate(now: Date = new Date()): string {
   return `${y}-${m}-${d}`
 }
 
+/** Record (or overwrite) the latest result for a problem. */
 export function recordProblemResult(
   data: SaveData,
   problemId: string,
@@ -105,8 +106,6 @@ export function recordProblemResult(
   targetAxisId: string | null,
   solvedDate: string = todayLocalDate(),
 ): SaveData {
-  // Score is final on first submit — do not overwrite an existing entry.
-  if (data.problems[problemId]) return data
   return {
     ...data,
     problems: {

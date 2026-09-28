@@ -1,50 +1,58 @@
+import { useState } from 'react'
+import {
+  problemDisplayName,
+  problemsForLevel,
+  type ProblemLevel,
+} from '../data/logicTreeProblems'
+import type { SaveData } from '../storage/save'
 import styles from './Screens.module.css'
 
 type LearningMenuProps = {
+  saveData: SaveData
   /** Lv1 (既存ロジックツリー) が全問クリア済み */
   lv1Cleared: boolean
   /** Lv2 が全問クリア済み */
   lv2Cleared: boolean
   /** Lv2 に1問でも進捗がある（Lv1未クリアでも継続できるように） */
   lv2Started: boolean
-  onSelectLogicTreeLv1: () => void
-  onSelectLogicTreeLv2: () => void
+  onSelectProblem: (problemId: string) => void
   onBack: () => void
 }
 
-type MenuItem = {
+type ThemeItem = {
   id: string
   label: string
   locked: boolean
   cleared: boolean
-  onSelect?: () => void
+  level?: ProblemLevel
   lockHint?: string
 }
 
 export function LearningMenu({
+  saveData,
   lv1Cleared,
   lv2Cleared,
   lv2Started,
-  onSelectLogicTreeLv1,
-  onSelectLogicTreeLv2,
+  onSelectProblem,
   onBack,
 }: LearningMenuProps) {
   const lv2Unlocked = lv1Cleared || lv2Started
+  const [expandedLevel, setExpandedLevel] = useState<ProblemLevel | null>(null)
 
-  const items: MenuItem[] = [
+  const items: ThemeItem[] = [
     {
       id: 'logic-tree-lv1',
       label: 'ロジックツリー',
       locked: false,
       cleared: lv1Cleared,
-      onSelect: onSelectLogicTreeLv1,
+      level: 1,
     },
     {
       id: 'logic-tree-lv2',
       label: 'ロジックツリー Lv2',
       locked: !lv2Unlocked,
       cleared: lv2Cleared,
-      onSelect: onSelectLogicTreeLv2,
+      level: 2,
       lockHint: 'Lv1クリアで解放',
     },
     {
@@ -63,27 +71,38 @@ export function LearningMenu({
     },
   ]
 
+  function toggleLevel(level: ProblemLevel) {
+    setExpandedLevel((prev) => (prev === level ? null : level))
+  }
+
   return (
     <div className={styles.screen}>
       <div className={styles.panel}>
         <h1 className={styles.panelTitle}>学習メニュー</h1>
-        <p className={styles.hint}>学びたいテーマを選んでください</p>
+        <p className={styles.hint}>
+          テーマを開き、解きたい問題を選んでください（クリア済みも再挑戦可）
+        </p>
         <ul className={styles.menuList}>
           {items.map((item) => {
-            const disabled = item.locked || item.cleared
+            const isExpanded =
+              item.level !== undefined && expandedLevel === item.level
 
             return (
               <li key={item.id}>
                 <button
                   type="button"
                   className={
-                    item.locked || item.cleared
+                    item.locked
                       ? styles.menuLocked
-                      : styles.menuItem
+                      : item.cleared
+                        ? styles.menuFinished
+                        : styles.menuItem
                   }
-                  disabled={disabled}
+                  disabled={item.locked}
+                  aria-expanded={item.level !== undefined ? isExpanded : undefined}
                   onClick={() => {
-                    if (!disabled) item.onSelect?.()
+                    if (item.locked || item.level === undefined) return
+                    toggleLevel(item.level)
                   }}
                 >
                   <span>{item.label}</span>
@@ -92,13 +111,52 @@ export function LearningMenu({
                       {item.lockHint ?? 'ロック中'}
                     </span>
                   )}
-                  {item.cleared && (
-                    <span className={styles.scoreBadge}>クリア済み</span>
-                  )}
-                  {!item.locked && !item.cleared && (
-                    <span className={styles.openBadge}>プレイ</span>
+                  {!item.locked && (
+                    <span
+                      className={
+                        item.cleared ? styles.scoreBadge : styles.openBadge
+                      }
+                    >
+                      {isExpanded
+                        ? '閉じる'
+                        : item.cleared
+                          ? 'クリア済み・再プレイ'
+                          : '問題を選ぶ'}
+                    </span>
                   )}
                 </button>
+
+                {isExpanded && item.level !== undefined && (
+                  <ul className={styles.problemList} aria-label={`${item.label}の問題一覧`}>
+                    {problemsForLevel(item.level).map((problem, index) => {
+                      const entry = saveData.problems[problem.id]
+                      const solved = Boolean(entry)
+                      return (
+                        <li key={problem.id}>
+                          <button
+                            type="button"
+                            className={styles.problemItem}
+                            onClick={() => onSelectProblem(problem.id)}
+                          >
+                            <span className={styles.problemLabel}>
+                              <span className={styles.problemIndex}>
+                                Q{index + 1}
+                              </span>
+                              {problemDisplayName(problem)}
+                            </span>
+                            {solved ? (
+                              <span className={styles.scoreBadge}>
+                                {entry.score}点・再挑戦
+                              </span>
+                            ) : (
+                              <span className={styles.openBadge}>挑戦</span>
+                            )}
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
               </li>
             )
           })}
